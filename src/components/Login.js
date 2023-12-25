@@ -1,22 +1,23 @@
 import React, { useState, useRef } from 'react'
 import Header from "./Header"
 import { checkValidateData } from '../utlis/loginformValidation';
-import {createUserWithEmailAndPassword } from "firebase/auth";
+import {createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utlis/firebase";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utlis/userSlice';
 
 
 const Login = () => {
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [signInForm,setSignInForm] = useState(true);
   const [errorMessage,setErrorMessage] = useState(null);
 
-  const toggleSignInUp = () => {
-    setSignInForm(!signInForm);
-  }
-
   const email = useRef(null);
   const password = useRef(null);
-  //const name = useRef(null);
+  const name = useRef(null);
 
   const handleClickButton = () => {
 
@@ -26,13 +27,22 @@ const Login = () => {
 
     if(message) return;
 
-    if(signInForm){
+    if(!signInForm){
 
       createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-
+        updateProfile(user, {
+          displayName: name.current.value , photoURL: "https://example.com/jane-q-user/profile.jpg"
+        }).then(() => {
+          const {uid, email, displayName} = auth.currentUser;
+          dispatch(addUser({uid : uid, email : email, displayName: displayName}));
+          navigate("/browse");
+        }).catch((error) => {
+          // An error occurred
+          setErrorMessage(error.message);
+        });
         console.log(user);
         // ...
       })
@@ -46,6 +56,27 @@ const Login = () => {
 
     }
 
+    else {
+
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          navigate("/browse");
+          console.log(user);
+          
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
+
+  };
+
+  const toggleSignInUp = () => {
+    setSignInForm(!signInForm);
   }
 
   return (
@@ -58,12 +89,12 @@ const Login = () => {
 
       <form onSubmit={(e) => e.preventDefault()} className='absolute p-12 my-36 mx-auto right-0 left-0 w-3/12 bg-black  bg-opacity-80 rounded-lg text-white'>
 
-        <h1 className='mx-2 my-4 font-semibold text-3xl'>{signInForm ? "Sign Up" : "Sign In"}</h1>
+        <h1 className='mx-2 my-4 font-semibold text-3xl'>{signInForm ? "Sign In" : "Sign Up"}</h1>
 
-        { signInForm &&
-          <input type="text"
+        { !signInForm && (
+          <input type="text" ref={name}
         placeholder='User Name' 
-        className='mx-2 my-4 p-4 w-full rounded-lg bg-gray-800'/>}
+        className='mx-2 my-4 p-4 w-full rounded-lg bg-gray-800'/>)}
 
         <input type="text" ref={email}
          placeholder='Email or PhoneNumber' 
@@ -76,9 +107,9 @@ const Login = () => {
 
         <p className='font-semibold text-red-800'>{errorMessage}</p>
 
-        <button className='mx-2 my-8 p-4 bg-red-700 text-white font-bold w-full rounded-lg' onClick={handleClickButton} >{signInForm ? "Sign Up" : "Sign In"}</button>
+        <button className='mx-2 my-8 p-4 bg-red-700 text-white font-bold w-full rounded-lg' onClick={handleClickButton} >{signInForm ? "Sign In" : "Sign Up"}</button>
 
-        <p className='cursor-pointer hover:text-gray-400' onClick={toggleSignInUp}>{signInForm ? "Already Registered User ? Sign In here" :"New to Netflix? Sign Up Now"}</p>
+        <p className='cursor-pointer hover:text-gray-400' onClick={toggleSignInUp}>{signInForm ? "New to Netflix? Sign Up Now" : "Already Registered User ? Sign In here" }</p>
       </form>
     </div>
   )
