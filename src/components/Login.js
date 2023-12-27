@@ -4,13 +4,13 @@ import { checkValidateData } from '../utlis/loginformValidation';
 import {createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import {signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utlis/firebase";
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utlis/userSlice';
+import { BACKGROUND } from '../utlis/constants';
 
 
 const Login = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const dispatch = useDispatch();
   const [signInForm,setSignInForm] = useState(true);
   const [errorMessage,setErrorMessage] = useState(null);
@@ -38,12 +38,11 @@ const Login = () => {
         }).then(() => {
           const {uid, email, displayName} = auth.currentUser;
           dispatch(addUser({uid : uid, email : email, displayName: displayName}));
-          navigate("/browse");
+          //navigate("/browse");
         }).catch((error) => {
           // An error occurred
           setErrorMessage(error.message);
         });
-        console.log(user);
         // ...
       })
       .catch((error) => {
@@ -62,8 +61,7 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
-          navigate("/browse");
-          console.log(user);
+          //navigate("/browse");
           
         })
         .catch((error) => {
@@ -83,7 +81,7 @@ const Login = () => {
     <div>
       <Header />
       <div className='absolute'>
-        <img src="https://assets.nflxext.com/ffe/siteui/vlv3/d1532433-07b1-4e39-a920-0f08b81a489e/67033404-2df8-42e0-a5a0-4c8288b4da2c/IN-en-20231120-popsignuptwoweeks-perspective_alpha_website_large.jpg"
+        <img src= {BACKGROUND}
         alt="background-img"/>
       </div>
 
