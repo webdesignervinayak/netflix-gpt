@@ -23,7 +23,7 @@ const Header = () => {
         dispatch(addUser({uid : uid, email : email, displayName: displayName}));
         navigate("/browse");
       } else {
-        dispatch(removeUser);
+        dispatch(removeUser());
         navigate("/")
       }
 
