@@ -1,5 +1,5 @@
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../utlis/firebase';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ const Header = () => {
   const user = useSelector(store => store.user)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [changetoHome, setChangetoHome] = useState(false)
 
   const handleSignOut = () => {
     signOut(auth).then(() => {
@@ -21,6 +22,7 @@ const Header = () => {
 
   const toggleGPTSearch = () => {
     dispatch(toggleGptSearchView());
+    setChangetoHome(!changetoHome);
   }
 
   useEffect( () => {
@@ -51,7 +53,7 @@ const Header = () => {
         <select className='bg-black text-slate-400 p-2 m-2' onChange={handleLanguageChange}>
           {SupportedLanguages.map((lang) => (<option key={lang.identifier} value={lang.identifier}> {lang.name} </option>))}
         </select>
-        <button onClick={toggleGPTSearch} className='m-2 py-2 px-3 bg-blue-500 text-white rounded-md'>GPT Search</button>
+        <button onClick={toggleGPTSearch} className='m-2 py-2 px-3 bg-blue-500 text-white rounded-md'>{!changetoHome ? "GPT Search" : "Home"}</button>
 
         <img src="https://occ-0-5261-3662.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABWHwk9T_pV0xwh3qNnsqDHzMMwdoVXMlbNmSTmbon3-Pf3JVUOAWzIbk8EpYNsSkZ7kFHSZRw-0WLJAPcrvWDUiIIivqBtE.png?r=ab6"
         alt="userImage"

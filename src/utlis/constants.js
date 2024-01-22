@@ -6,7 +6,7 @@ export const options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZTBhZTlhZmZmNTZlN2M1ODBjZDdkMjQ4YzMzYzYyMSIsInN1YiI6IjY1OGFjODRhMzI1YTUxNThjODAxOWE0MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.69yTHAqZqUrNco2OwXVs6bbpCBCqRzVAkTxasReXHIE'
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkZTBhZTlhZmZmNTZlN2M1ODBjZDdkMjQ4YzMzYzYyMSIsInN1YiI6IjY1OGFjODRhMzI1YTUxNThjODAxOWE0MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.69yTHAqZqUrNco2OwXVs6bbpCBCqRzVAkTxasReXHIE',
     }
   };
 
@@ -15,4 +15,4 @@ export const CDN_URL = "https://image.tmdb.org/t/p/w500/"
 export const SupportedLanguages = [{identifier:"English", name:"English"},
 {identifier:"Telugu", name:"Telugu"},{identifier:"Hindi", name:"Hindi"}];
 
-  
+export const OPENAI_KEY = process.env.REACT_APP_OPENAI_KEY
